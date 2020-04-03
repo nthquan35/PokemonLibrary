@@ -14,6 +14,12 @@ class App extends Component {
 		};
 	}
 
+	// componentDidMount() {
+	// 	fetch('add a link here')
+	// 		.then(response => response.json())
+	// 		.then(users => { this.setState({pokemons: users}) });
+	// }
+
 	onSearchChange = (event) =>{
 		this.setState({searchfield: event.target.value});
 	}
