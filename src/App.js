@@ -3,6 +3,7 @@ import CardList from './CardList';
 import { pokemons } from './Pokemon';
 import SearchBox from './SearchBox';
 import './App.css';
+import Scroll from './Scroll';
 
 document.title = "Pokemon Library";
 class App extends Component {
@@ -32,7 +33,9 @@ class App extends Component {
 			<div className = 'tc'>
 				<h1 className='f-headline'> Pokemon Index </h1>
 				<SearchBox searchChange = {this.onSearchChange}/>
-				<CardList pokemons={filterPokemons} />
+				<Scroll>
+					<CardList pokemons={filterPokemons} />
+				</Scroll>
 			</div>
 		);
 	}
