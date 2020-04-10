@@ -4,6 +4,7 @@ import { pokemons } from '../components/Pokemon';
 import SearchBox from '../components/SearchBox';
 import './App.css';
 import Scroll from '../components/Scroll';
+import Clock from '../components/Clock';
 
 document.title = "Pokemon Library";
 class App extends Component {
@@ -30,12 +31,17 @@ class App extends Component {
 			return pokemon.name.toLowerCase().includes(this.state.searchfield.toLowerCase());
 		})
 		return(
-			<div className = 'tc'>
-				<h1 className='f-headline'> Pokemon Index </h1>
-				<SearchBox searchChange = {this.onSearchChange}/>
-				<Scroll>
-					<CardList pokemons={filterPokemons} />
-				</Scroll>
+			<div>
+				<div>
+					<Clock className='db'/>
+				</div>
+				<div className = 'tc'>
+					<h1 className='f-headline'> Pokemon Index </h1>
+					<SearchBox searchChange = {this.onSearchChange}/>
+					<Scroll>
+						<CardList pokemons={filterPokemons} />
+					</Scroll>
+				</div>
 			</div>
 		);
 	}

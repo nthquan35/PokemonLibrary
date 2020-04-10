@@ -5,9 +5,7 @@ const CardList = ({ pokemons }) => {
 	return (
 		<div>
 			{pokemons.map((user, index) => 
-				<Card key={index} 
-					id={pokemons[index].id} 
-					name={pokemons[index].name} 
+				<Card name={pokemons[index].name} 
 					img ={pokemons[index].img}/>)
     		};
 		</div>
