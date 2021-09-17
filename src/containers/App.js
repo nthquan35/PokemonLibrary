@@ -1,50 +1,78 @@
-import React, {Component} from 'react';
-import CardList from '../components/CardList';
+import React, {useState} from 'react';
+import CardList from '../components/Card/CardList';
 import { pokemons } from '../components/Pokemon';
 import SearchBox from '../components/SearchBox';
-import './App.css';
+// import './App.css';
 import Scroll from '../components/Scroll';
 import Clock from '../components/Clock';
+import PokemonTitle from '../components/ApplicationName/PokemonTitle';
 
 document.title = "Pokemon Library";
-class App extends Component {
-	constructor() {
-		super();
-		this.state = {
-			pokemons: pokemons,
-			searchfield: ''
-		};
+// class App extends Component {
+// 	constructor() {
+// 		super();
+// 		this.state = {
+// 			pokemons: pokemons,
+// 			searchfield: ''
+// 		};
+// 	}
+function App() {
+	const [pokemonsArray, setPokemons] = useState(pokemons);
+	const [searchField, setSearchField] = useState('');
+	const [currentPage, setCurrentPage] = useState(true);
+	const onSearchChange = (event) =>{
+		setSearchField(event.target.value);
 	}
 
-	// componentDidMount() {
-	// 	fetch('add a link here')
-	// 		.then(response => response.json())
-	// 		.then(users => { this.setState({pokemons: users}) });
-	// }
 
-	onSearchChange = (event) =>{
-		this.setState({searchfield: event.target.value});
-	}
+	// render() {
+	const filterPokemons = pokemonsArray.filter(pokemon => {
+		return pokemon.name.toLowerCase().includes(searchField.toLowerCase());
+	})
 
-	render() {
-		const filterPokemons = this.state.pokemons.filter(pokemon => {
-			return pokemon.name.toLowerCase().includes(this.state.searchfield.toLowerCase());
-		})
+	if (currentPage)
 		return(
 			<div>
 				<div>
 					<Clock className='db'/>
+
 				</div>
 				<div className = 'tc'>
-					<h1 className='f-headline'> Pokemon Index </h1>
-					<SearchBox searchChange = {this.onSearchChange}/>
+					<PokemonTitle/>
+					<nav className='overflow-auto'>
+						<SearchBox searchChange = {onSearchChange}/>
+						<button 
+							className='fr dib dim pointer f2 bg-moon-gray br3'
+							onClick={() => setCurrentPage(false)}
+						>
+							ADD+
+						</button>
+					</nav>
 					<Scroll>
 						<CardList pokemons={filterPokemons} />
 					</Scroll>
 				</div>
 			</div>
-		);
-	}
+		)
+	return (
+		<div>
+			<div>
+				<Clock className='db'/>
+			</div>
+			<div className = 'tc'>
+				<PokemonTitle/>
+				<h2>Add New Pokemon to page</h2>
+				{/*accept input here and retrieve data from api*/}
+				<SearchBox/>
+				<button 
+					className='fr dib dim pointer f2 bg-moon-gray br3'
+					onClick={() => setCurrentPage(true)}
+				>Back
+				</button>
+			</div>
+		</div>
+
+	)
 };
 
 export default App;

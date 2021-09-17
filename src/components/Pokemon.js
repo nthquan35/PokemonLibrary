@@ -32,7 +32,7 @@ export const pokemons = [
 	{
 		id: 7,
 		name: 'Bulbasaur',
-		img: 'https://vignette.wikia.nocookie.net/pokemon/images/2/21/001Bulbasaur.png/revision/latest/scale-to-width-down/350?cb=20140328190757'
+		img: 'https://vignette.wikia.nocookie.net/pokemon/images/2/21/001Bulbasaur.png/revision/latest/scale-to-width-down/350?cb=20140328190757',
 	},
 	{
 		id: 8,
