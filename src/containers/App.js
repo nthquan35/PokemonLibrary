@@ -1,31 +1,43 @@
 import React, {useState} from 'react';
+// import Card from '../components/Card/Card';
 import CardList from '../components/Card/CardList';
 import { pokemons } from '../components/Pokemon';
 import SearchBox from '../components/SearchBox';
+import LookupBox from '../components/LookupBox';
 // import './App.css';
 import Scroll from '../components/Scroll';
 import Clock from '../components/Clock';
 import PokemonTitle from '../components/ApplicationName/PokemonTitle';
+import useFetch from '../components/useFetch';
+
 
 document.title = "Pokemon Library";
-// class App extends Component {
-// 	constructor() {
-// 		super();
-// 		this.state = {
-// 			pokemons: pokemons,
-// 			searchfield: ''
-// 		};
-// 	}
+
 function App() {
 	const [pokemonsArray, setPokemons] = useState(pokemons);
 	const [searchField, setSearchField] = useState('');
 	const [currentPage, setCurrentPage] = useState(true);
-	const onSearchChange = (event) =>{
-		setSearchField(event.target.value);
+	const [searchDebounce, setSearchDebouce] = useState('');
+
+	function onSubmit(e){
+		e.preventDefault();
+		setSearchDebouce(searchField);
 	}
 
+	const {notFound, data, error} = useFetch(
+		searchDebounce? 
+			`https://pokeapi.co/api/v2/pokemon/${searchDebounce}`
+		:
+			''
+	)
 
-	// render() {
+
+	function onKeyDetect(e){
+		if (e.key === 'Enter'){
+			onSubmit();
+		}
+	}
+
 	const filterPokemons = pokemonsArray.filter(pokemon => {
 		return pokemon.name.toLowerCase().includes(searchField.toLowerCase());
 	})
@@ -40,10 +52,15 @@ function App() {
 				<div className = 'tc'>
 					<PokemonTitle/>
 					<nav className='overflow-auto'>
-						<SearchBox searchChange = {onSearchChange}/>
+						<SearchBox 
+							searchChange = {(e) => setSearchField(e.target.value)}
+						/>
 						<button 
 							className='fr dib dim pointer f2 bg-moon-gray br3'
-							onClick={() => setCurrentPage(false)}
+							onClick={() => {
+								setCurrentPage(false)
+								setSearchField('')
+							}}
 						>
 							ADD+
 						</button>
@@ -63,10 +80,35 @@ function App() {
 				<PokemonTitle/>
 				<h2>Add New Pokemon to page</h2>
 				{/*accept input here and retrieve data from api*/}
-				<SearchBox/>
+				<LookupBox
+					searchChange={(e) => setSearchField(e.target.value)}
+					onKeyDetect={(e) => onKeyDetect(e)}
+					onSubmit={onSubmit}
+				/>
+				{notFound || error ?
+					<p>NOT FOUND or Error occured.</p>
+					:
+					<div>
+						{data?
+							<div>
+								{data.name && <p>{data.name}</p>}
+								<img src={data.sprites.other["official-artwork"].front_default} alt="No images"></img>							
+							</div>
+							:
+							<p></p>
+						}
+						{/*<pre>{JSON.stringify(data, null, 2)}</pre>*/}
+						{/*<p>{JSON.stringify(data)}</p>*/}
+						{/*<img src={data.sprites.other["official-artwork"].front_default} alt="No images"></img>*/}
+					</div>
+
+				}
 				<button 
 					className='fr dib dim pointer f2 bg-moon-gray br3'
-					onClick={() => setCurrentPage(true)}
+					onClick={() => {
+						setCurrentPage(true)
+						setSearchField('')
+					}}
 				>Back
 				</button>
 			</div>
