@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-// import Card from '../components/Card/Card';
+import Card from '../components/Card/Card';
 import CardList from '../components/Card/CardList';
 import { pokemons } from '../components/Pokemon';
 import SearchBox from '../components/SearchBox';
@@ -20,13 +20,14 @@ function App() {
 	const [searchDebounce, setSearchDebouce] = useState('');
 
 	function onSubmit(e){
-		e.preventDefault();
+		//this will only allow to search once
+		// e.preventDefault();
 		setSearchDebouce(searchField);
 	}
 
 	const {notFound, data, error} = useFetch(
 		searchDebounce? 
-			`https://pokeapi.co/api/v2/pokemon/${searchDebounce}`
+			`https://pokeapi.co/api/v2/pokemon/${searchDebounce.toLowerCase()}`
 		:
 			''
 	)
@@ -66,7 +67,10 @@ function App() {
 						</button>
 					</nav>
 					<Scroll>
-						<CardList pokemons={filterPokemons} />
+						<CardList 
+							pokemons={filterPokemons} 
+							currentPage={currentPage} 
+						/>
 					</Scroll>
 				</div>
 			</div>
@@ -90,21 +94,21 @@ function App() {
 					:
 					<div>
 						{data?
-							<div>
-								{data.name && <p>{data.name}</p>}
-								<img src={data.sprites.other["official-artwork"].front_default} alt="No images"></img>							
-							</div>
+							<Card 
+							// fix the id value incrementation
+								key={21} 
+								name={data.name.charAt(0).toUpperCase() + data.name.slice(1)} 
+								img ={data.sprites.other["official-artwork"].front_default}
+								currentPage= {currentPage}
+							/>
 							:
 							<p></p>
 						}
-						{/*<pre>{JSON.stringify(data, null, 2)}</pre>*/}
-						{/*<p>{JSON.stringify(data)}</p>*/}
-						{/*<img src={data.sprites.other["official-artwork"].front_default} alt="No images"></img>*/}
 					</div>
 
 				}
 				<button 
-					className='fr dib dim pointer f2 bg-moon-gray br3'
+					className='absolute right-0 bottom- dib dim pointer f2 bg-moon-gray br3'
 					onClick={() => {
 						setCurrentPage(true)
 						setSearchField('')
