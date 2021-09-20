@@ -11,7 +11,10 @@ function useFetch(uri) {
     fetch(uri)
     .then(data => data.json())
     .then(setData)
-    .then(() => setNotFound(false))
+    .then(() => {
+      setNotFound(false)
+      setError('')
+    })
     .catch(setError)
   }, [uri]);
   return {notFound, data, error};

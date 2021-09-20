@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 function LookupBox({searchChange, onKeyDetect, onSubmit}){
 	return (
 		<div onKeyDown={onKeyDetect} className='pa2'>

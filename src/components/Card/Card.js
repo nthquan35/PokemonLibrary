@@ -17,7 +17,7 @@ function Card(props){
 			</div>
 			<button 
 				className='dim w-20 f4 link pa3 dib br3 black fw-4 bg-light-yellow' 
-				// onClick={onSubmit}
+				onClick={props.handleSubmit}
 			>Add Pokemon
 			</button>
 

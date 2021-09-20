@@ -4,7 +4,7 @@ import CardList from '../components/Card/CardList';
 import { pokemons } from '../components/Pokemon';
 import SearchBox from '../components/SearchBox';
 import LookupBox from '../components/LookupBox';
-// import './App.css';
+import './App.css';
 import Scroll from '../components/Scroll';
 import Clock from '../components/Clock';
 import PokemonTitle from '../components/ApplicationName/PokemonTitle';
@@ -18,11 +18,15 @@ function App() {
 	const [searchField, setSearchField] = useState('');
 	const [currentPage, setCurrentPage] = useState(true);
 	const [searchDebounce, setSearchDebouce] = useState('');
+	const [isAdded, setIsAdded] = useState(false);
+	const [id, setId] = useState(21);
+
 
 	function onSubmit(e){
 		//this will only allow to search once
 		// e.preventDefault();
 		setSearchDebouce(searchField);
+		setIsAdded(false);
 	}
 
 	const {notFound, data, error} = useFetch(
@@ -37,6 +41,18 @@ function App() {
 		if (e.key === 'Enter'){
 			onSubmit();
 		}
+	}
+
+	function handleSubmit(){
+		var obj = {
+			id: `${id}`,
+			name: `${data.name.charAt(0).toUpperCase() + data.name.slice(1)}`,
+			img: `${data.sprites.other["official-artwork"].front_default}`
+		}
+		setIsAdded(true);
+		setPokemons(pokemonsArray.concat(obj));
+		setId(id+1);
+		setSearchField('');
 	}
 
 	const filterPokemons = pokemonsArray.filter(pokemon => {
@@ -86,21 +102,27 @@ function App() {
 				{/*accept input here and retrieve data from api*/}
 				<LookupBox
 					searchChange={(e) => setSearchField(e.target.value)}
-					onKeyDetect={(e) => onKeyDetect(e)}
 					onSubmit={onSubmit}
+					onKeyDetect={onKeyDetect}
 				/>
 				{notFound || error ?
 					<p>NOT FOUND or Error occured.</p>
 					:
 					<div>
 						{data?
-							<Card 
-							// fix the id value incrementation
-								key={21} 
-								name={data.name.charAt(0).toUpperCase() + data.name.slice(1)} 
-								img ={data.sprites.other["official-artwork"].front_default}
-								currentPage= {currentPage}
-							/>
+							<div>
+								{isAdded?
+									<h3 className={`f4 fw-3 light-silver`}>Added!</h3>
+									:
+									<Card 
+										key={id} 
+										name={data.name.charAt(0).toUpperCase() + data.name.slice(1)} 
+										img ={data.sprites.other["official-artwork"].front_default}
+										currentPage= {currentPage}
+										handleSubmit={handleSubmit}
+									/>
+								}
+							</div>
 							:
 							<p></p>
 						}
@@ -108,7 +130,7 @@ function App() {
 
 				}
 				<button 
-					className='absolute right-0 bottom- dib dim pointer f2 bg-moon-gray br3'
+					className='absolute right-0 bottom-0 dib dim pointer f2 bg-moon-gray br3'
 					onClick={() => {
 						setCurrentPage(true)
 						setSearchField('')
