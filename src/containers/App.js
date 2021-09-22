@@ -21,6 +21,12 @@ function App() {
 	const [isAdded, setIsAdded] = useState(false);
 	const [id, setId] = useState(21);
 
+	var {notFound, data, error} = useFetch(
+		searchDebounce? 
+			`https://pokeapi.co/api/v2/pokemon/${searchDebounce.toLowerCase()}`
+		:
+			''
+	)
 
 	function onSubmit(e){
 		//this will only allow to search once
@@ -28,14 +34,6 @@ function App() {
 		setSearchDebouce(searchField);
 		setIsAdded(false);
 	}
-
-	const {notFound, data, error} = useFetch(
-		searchDebounce? 
-			`https://pokeapi.co/api/v2/pokemon/${searchDebounce.toLowerCase()}`
-		:
-			''
-	)
-
 
 	function onKeyDetect(e){
 		if (e.key === 'Enter'){
@@ -52,7 +50,6 @@ function App() {
 		setIsAdded(true);
 		setPokemons(pokemonsArray.concat(obj));
 		setId(id+1);
-		setSearchField('');
 	}
 
 	const filterPokemons = pokemonsArray.filter(pokemon => {
@@ -92,7 +89,7 @@ function App() {
 			</div>
 		)
 	return (
-		<div>
+		<div onKeyDown={onKeyDetect}>
 			<div>
 				<Clock className='db'/>
 			</div>
@@ -103,16 +100,15 @@ function App() {
 				<LookupBox
 					searchChange={(e) => setSearchField(e.target.value)}
 					onSubmit={onSubmit}
-					onKeyDetect={onKeyDetect}
 				/>
-				{notFound || error ?
-					<p>NOT FOUND or Error occured.</p>
+				{notFound && error ?
+					<p className="dark-red">NOT FOUND or Error occured.</p>
 					:
 					<div>
-						{data?
+						{data && searchDebounce?
 							<div>
 								{isAdded?
-									<h3 className={`f4 fw-3 light-silver`}>Added!</h3>
+									<h3 id="button-fadeOut" className={`f4 fw-3 washed-red`}>Added!</h3>
 									:
 									<Card 
 										key={id} 
@@ -134,6 +130,8 @@ function App() {
 					onClick={() => {
 						setCurrentPage(true)
 						setSearchField('')
+						setIsAdded(false)
+						setSearchDebouce('')
 					}}
 				>Back
 				</button>

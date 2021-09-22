@@ -5,21 +5,23 @@ h1 {
 	font-family: 'Bangers', cursive;
 }
 
-/*.hiddenTag {*/
-  /*visibility: hidden;
-  opacity: 0;
-  transition: visibility 0s 5s, opacity 5s linear;
-}*/
-/*	opacity: 0;
-  	transition: all 250ms linear 2s;
-  }*/
 
+#button-fadeOut {
+	animation:  button-fadeOut 0.5s 1;
+	-webkit-animation:  button-fadeOut 0.5s 1;
+	animation-fill-mode:  forwards;
 
- @keyframes hiddenTag {
-	0% {
-		opacity: 1;
-	}
-	100% {
-		opacity: 0;
-	}
+	animation-delay:  2s;
+	-webkit-animation-delay:  2s;
+	-wekit-animation-fill-mode:  forwards;
+}
+
+@keyframes button-fadeOut{
+	from {opacity: 1;}
+	to {opacity: 0;}
+}
+
+@-webkit-keyframes button-fadeOut{
+	from {opacity: 1;}
+	to {opacity: 0;}	
 }

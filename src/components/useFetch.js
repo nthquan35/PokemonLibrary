@@ -3,7 +3,7 @@ import {useState, useEffect} from 'react';
 
 function useFetch(uri) {
   const [data, setData] = useState();
-  const [notFound, setNotFound] = useState(false);
+  const [notFound, setNotFound] = useState(true);
   const [error, setError] = useState();
 
   useEffect(() => {
@@ -15,7 +15,10 @@ function useFetch(uri) {
       setNotFound(false)
       setError('')
     })
-    .catch(setError)
+    .catch((e) => {
+      setError(e)
+      setNotFound(true)
+    })
   }, [uri]);
   return {notFound, data, error};
 }
