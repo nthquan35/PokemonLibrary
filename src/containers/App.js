@@ -52,6 +52,11 @@ function App() {
 		setId(id+1);
 	}
 
+	function handleDelete(name){
+		// console.log(name);
+		setPokemons(pokemonsArray.filter(card => card.name !== name));
+	}
+
 	const filterPokemons = pokemonsArray.filter(pokemon => {
 		return pokemon.name.toLowerCase().includes(searchField.toLowerCase());
 	})
@@ -82,7 +87,8 @@ function App() {
 					<Scroll>
 						<CardList 
 							pokemons={filterPokemons} 
-							currentPage={currentPage} 
+							currentPage={currentPage}
+							handleDelete={handleDelete}
 						/>
 					</Scroll>
 				</div>
