@@ -20,6 +20,7 @@ function App() {
 	const [searchDebounce, setSearchDebouce] = useState('');
 	const [isAdded, setIsAdded] = useState(false);
 	const [id, setId] = useState(21);
+	const [isExisted, setIsExisted] = useState(false);
 
 	var {notFound, data, error} = useFetch(
 		searchDebounce? 
@@ -31,8 +32,13 @@ function App() {
 	function onSubmit(e){
 		//this will only allow to search once
 		// e.preventDefault();
-		setSearchDebouce(searchField);
-		setIsAdded(false);
+		if (pokemonsArray.filter(pokemon => pokemon.name.toLowerCase() === searchDebounce.toLowerCase()).length !== 0){
+			setIsExisted(true);
+			setSearchDebouce('');
+		} else{
+			setSearchDebouce(searchField);
+			setIsAdded(false);
+		}
 	}
 
 	function onKeyDetect(e){
@@ -42,14 +48,16 @@ function App() {
 	}
 
 	function handleSubmit(){
-		var obj = {
-			id: `${id}`,
-			name: `${data.name.charAt(0).toUpperCase() + data.name.slice(1)}`,
-			img: `${data.sprites.other["official-artwork"].front_default}`
+		if (!isExisted){
+			var obj = {
+				id: `${id}`,
+				name: `${data.name.charAt(0).toUpperCase() + data.name.slice(1)}`,
+				img: `${data.sprites.other["official-artwork"].front_default}`
+			}
+			setIsAdded(true);
+			setPokemons(pokemonsArray.concat(obj));
+			setId(id+1);
 		}
-		setIsAdded(true);
-		setPokemons(pokemonsArray.concat(obj));
-		setId(id+1);
 	}
 
 	function handleDelete(name){
@@ -104,11 +112,14 @@ function App() {
 				<h2>Add New Pokemon to page</h2>
 				{/*accept input here and retrieve data from api*/}
 				<LookupBox
-					searchChange={(e) => setSearchField(e.target.value)}
+					searchChange={(e) => {
+						setSearchField(e.target.value)
+						setIsExisted(false)						
+					}}
 					onSubmit={onSubmit}
 				/>
 				{notFound && error ?
-					<p className="dark-red">NOT FOUND or Error occured.</p>
+					<p className="dark-red">Cannot find pokemon name <b>{searchField}</b></p>
 					:
 					<div>
 						{data && searchDebounce?
@@ -126,7 +137,15 @@ function App() {
 								}
 							</div>
 							:
-							<p></p>
+							<div>
+								{isExisted?
+									<p className="dark-red"><b>{searchField}</b> is already existed in the database</p>
+									:
+									<p></p>
+								}
+							</div>
+					
+							
 						}
 					</div>
 
